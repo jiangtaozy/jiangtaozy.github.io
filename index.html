@@ -1,13 +1,55 @@
-# hi, Jemo!
-
-- Did you lost anything?
-
-- No
-
-- What do you want to do?
-
-- I want to make a online courser website.
-
-- What are you doing?
-
-- Now I'm doing it.
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="css/github-syntax-highlight.css">
+  <link rel="stylesheet" type="text/css" href="css/github-markdown.css">
+  <style>
+    .markdown-body {
+      min-width: 200px;
+      max-width: 790px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+  </style>
+  <script src="build/react.js"></script>
+  <script src="build/react-dom.js"></script>
+  <script src="build/browser.min.js"></script>
+  <script src="build/markdown-it.min.js"></script>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+      <div class="repository-with-sidebar repo-container new-discussion-timeline with-full-navigation">
+        <div id="js-repo-pjax-container" class="repository-content context-loader-container">
+          <div id="readme" class="boxed-group flush clearfix announce instapaper_body md">
+            <article class="markdown-body"></article>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/babel">
+    var md = window.markdownit();
+    function createMarkup(htm) {
+      return {__html: htm};
+    }
+    function NoteComponent(htm) {
+      return <div dangerouslySetInnerHTML={createMarkup(htm)} />;
+    }
+    fetch('res/hacker-book/contents.md')
+      .then(function(response) {
+        // console.log('response: ', response);
+        return response.text();
+      })
+      .then(function(body) {
+        // console.log('body: ', body);
+        var htm = md.render(body);
+        ReactDOM.render(
+          NoteComponent(htm),
+          document.querySelector(".markdown-body")
+        );
+      });
+  </script>
+</body>
+</html>
