@@ -37,13 +37,18 @@
     function NoteComponent(htm) {
       return <div dangerouslySetInnerHTML={createMarkup(htm)} />;
     }
-    fetch('res/hacker-book/contents.md')
+    fetch('res/hacker-book/contents.txt')
       .then(function(response) {
-        // console.log('response: ', response);
         return response.text();
       })
       .then(function(body) {
-        // console.log('body: ', body);
+        console.log('body: ', body);
+      });
+    fetch('res/hacker-book/contents.md')
+      .then(function(response) {
+        return response.text();
+      })
+      .then(function(body) {
         var htm = md.render(body);
         ReactDOM.render(
           NoteComponent(htm),
