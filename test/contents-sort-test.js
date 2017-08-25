@@ -1,5 +1,5 @@
 var fs = require('fs');
-var contents = fs.readFileSync('./res/hacker-book/contents.txt').toString();
+var contents = fs.readFileSync('../res/hacker-book/contents.txt').toString();
 // console.log('contents: ', contents);
 var contentsArray = contents.split('\n');
 // console.log('contentsArray: ', contentsArray);

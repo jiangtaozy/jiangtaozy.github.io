@@ -4,19 +4,14 @@
   <meta charset="utf-8">
   <link rel="stylesheet" type="text/css" href="css/github-syntax-highlight.css">
   <link rel="stylesheet" type="text/css" href="css/github-markdown.css">
-  <style>
-    .markdown-body {
-      min-width: 200px;
-      max-width: 790px;
-      margin: 0 auto;
-      padding: 30px;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="css/index.css">
   <script src="build/react.js"></script>
   <script src="build/react-dom.js"></script>
   <script src="build/browser.min.js"></script>
+  <script src="build/redux-3.7.2.js"></script>
   <script src="build/markdown-it.min.js"></script>
   <script src="build/zingtouch.min.js"></script>
+  <script type="text/babel" src="jsx/index.js"></script>
 </head>
 <body>
   <div class="wrapper">
@@ -30,53 +25,5 @@
       </div>
     </div>
   </div>
-  <script type="text/babel">
-    var md = window.markdownit();
-    function createMarkup(htm) {
-      return {__html: htm};
-    }
-    function NoteComponent(htm) {
-      return <div dangerouslySetInnerHTML={createMarkup(htm)} />;
-    }
-    function compare(str1, str2) {
-      var s1 = str1.substring(0, str1.indexOf('-'));
-      var s2 = str2.substring(0, str2.indexOf('-'));
-      return s1.localeCompare(s2);
-    }
- 
-    // 绑定滑动事件
-    var touchRegion = new ZingTouch.Region(document.body);
-    var markdownBodyElement = document.querySelector(".markdown-body");
-    touchRegion.bind(markdownBodyElement, 'swipe', function(e) {
-      console.log('e: ', e);
-      console.log('e.detail: ', e.detail);
-    });
-
-    const path = 'res/hacker-book/'; 
-    fetch(path + 'contents.txt')
-    .then(function(response) {
-      return response.text();
-    })
-    .then(function(body) {
-      // console.log('body: ', body);
-      var contentsArray = body.split('\n');
-      while(contentsArray[contentsArray.length - 1].length == 0) {
-        contentsArray.pop();
-      }
-      contentsArray.sort(compare);
-      // console.log('contentsArray: ', contentsArray);  
-      fetch(path + contentsArray[0])
-      .then(function(response) {
-        return response.text();
-      })
-      .then(function(body) {
-        var htm = md.render(body);
-        ReactDOM.render(
-          NoteComponent(htm),
-          document.querySelector(".markdown-body")
-        );
-      });
-    });
-  </script>
 </body>
 </html>
