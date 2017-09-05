@@ -100,7 +100,7 @@ ReactDOM.render(
   document.querySelector(".markdown-body")
 );
 // bind swipe action
-var touchRegion = new ZingTouch.Region(document.body);
+var touchRegion = new ZingTouch.Region(document.body, false, false);
 var markdownBodyElement = document.querySelector(".markdown-body");
 touchRegion.bind(markdownBodyElement, 'swipe', function(e) {
   console.log('e.detail: ', e.detail);
