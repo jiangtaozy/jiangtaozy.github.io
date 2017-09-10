@@ -27,3 +27,8 @@
 - And so much more
 
 // todo
+
+    var m = 'hello';
+    if(m) {
+        console.log('m: ', m);
+    }

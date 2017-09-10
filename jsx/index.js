@@ -1,4 +1,15 @@
-var md = window.markdownit();
+var hljs = window.hljs;
+var md = window.markdownit({
+  html: true,
+  linkify: true,
+  highlight: function(str, lang) {
+    if (lang && hljs.getLanguage(lang)) {              try {                                              return hljs.highlight(lang, str).value;        } catch (err) {
+        // Do nothing
+      }
+    } else {
+      return str;
+    }                                              }
+});
 function createMarkup(htm) {
   return {__html: htm};
 }
