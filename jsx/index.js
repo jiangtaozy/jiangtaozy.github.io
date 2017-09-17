@@ -100,7 +100,7 @@ var MarkdownBodyComponent = React.createClass({
         $('#fullpage').fullpage({
             loopHorizontal: false,
             scrollOverflow: true,
-            paddingBottom: '60px',
+            paddingBottom: '120px',
         });
       });
     });
