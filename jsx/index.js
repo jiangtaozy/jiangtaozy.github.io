@@ -1,15 +1,22 @@
+// markdown-it
 var hljs = window.hljs;
 var md = window.markdownit({
   html: true,
   linkify: true,
   highlight: function(str, lang) {
-    if (lang && hljs.getLanguage(lang)) {              try {                                              return hljs.highlight(lang, str).value;        } catch (err) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return hljs.highlight(lang, str).value;
+      } catch (err) {
         // Do nothing
       }
     } else {
       return str;
-    }                                              }
+    }
+  }
 });
+
+// util function
 function createMarkup(htm) {
   return {__html: htm};
 }
@@ -21,57 +28,86 @@ function compare(str1, str2) {
 
 // react
 var MarkdownBodyComponent = React.createClass({
+
   propTypes: {
     bookPath: React.PropTypes.string.isRequired,
     bookContents: React.PropTypes.string.isRequired,
   },
-  getInitialState: initState.bind(this, this.props.bookPath + this.props.bookContents),
+
+  getInitialState: function() {
+    console.log('getInitialState is called');
+    return {
+      contentsArray: [],
+      markdownBodyArray: [createMarkup('正在加载中，请您稍候！')],
+    };
+  },
+
+  render: function() {
+    console.log('render is called, state: ', this.state);
+    var slideArray = this.state.markdownBodyArray.map(function(markdownBody, index, slideArray) {
+        return <div key={'slide' + index} className="slide markdown-body" dangerouslySetInnerHTML={markdownBody} />;
+    });
+    return (
+        <div>
+            <div id="fullpage">
+                <div className="section fp-auto-height">
+                    {slideArray}
+                </div>
+            </div>
+        </div>
+    );
+  },
+
+  componentDidUpdate: function() {
+    console.log('componentDidUpdate is called');
+  },
+
+  componentWillMount: function() {
+    console.log('componentWillMount is called');
+  },
+
   componentDidMount: function() {
     console.log('componentDidMount is called');
-    alert('componentDidMount is called');
-  },
-  render: function() {
-    console.log('render is called');
-    alert('render is called');
-    return <div dangerouslySetInnerHTML={this.state.currentMarkdownBody} />;
+    var that = this;
+    fetch(this.props.bookPath + this.props.bookContents)
+    .then(function(response) {
+      return response.text();
+    }).then(function(body) {
+      var contentsArray = body.split('\n');
+      while(contentsArray[contentsArray.length - 1].length == 0) {
+        contentsArray.pop();
+      }
+      contentsArray.sort(compare);
+      that.setState({
+        contentsArray: contentsArray,
+      });
+    }).then(function() {
+      var fatchMarkupBodyTaskArray = that.state.contentsArray.map(function(content, index) {
+        return fetch(that.props.bookPath + content).then(function(response) {
+          return response.text();
+        }).then(function(body) {
+          var htmlBody = md.render(body);
+          var markupBody = createMarkup(htmlBody);
+          var markdownBodyArray = that.state.markdownBodyArray;
+          markdownBodyArray[index] = markupBody; 
+          that.setState({
+            markdownBodyArray: markdownBodyArray,
+          });
+        });
+      });
+      Promise.all(fatchMarkupBodyTaskArray).then(function() {
+        // fullpage
+        $('#fullpage').fullpage({
+            loopHorizontal: false,
+            scrollOverflow: true,
+            paddingBottom: '60px',
+        });
+      });
+    });
   },
 });
+
 ReactDOM.render(
   <MarkdownBodyComponent bookPath='res/hacker-book/' bookContents='contents.txt' />,
   document.querySelector(".markdown-body")
 );
-
-//var initState = function() {
-  //console.log('getInitialState is called');
-  //alert('getInitialState is called');
-  //var that = this;
-var initState = fetch(path)
-  .then(function(response) {
-    return response.text();
-  })
-  .then(function(body) {
-    var contentsArray = body.split('\n');
-    while(contentsArray[contentsArray.length - 1].length == 0) {
-      contentsArray.pop();
-    }
-    contentsArray.sort(compare);
-    that.setState({
-      contentsArray: contentsArray,
-    });
-  })
-    fetch(that.props.bookPath + that.state.contentsArray[that.state.currentIndex])
-    .then(function(response) {
-      return response.text();
-    })
-    .then(function(body) {
-      var htm = md.render(body);
-      that.setState({
-        currentMarkdownBody: createMarkup(htm),
-      })
-    });
-  return {
-    contentsArray: [],
-    currentIndex: 0,
-    currentMarkdownBody: createMarkup('正在加载中，请您稍候！'),
-  };
-};

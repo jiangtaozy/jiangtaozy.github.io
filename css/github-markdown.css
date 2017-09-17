@@ -15,7 +15,8 @@ body {
     font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
      */
     /* color: #333; */
-    font-size: 40px;
+    /*font-size: 40px;*/
+    font-size: 2em;
     background-color: #fff;
 }
 
