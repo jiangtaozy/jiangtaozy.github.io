@@ -57,3 +57,5 @@
 
       vi ~/.config/fish/config.fish  
       alias ll="ls --human-readable -l"
+      alias xmind='cd ~/src/xmind-8-update7-linux/XMind_amd64; and ./XMind &'
+
