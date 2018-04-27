@@ -59,3 +59,16 @@
       alias ll="ls --human-readable -l"
       alias xmind='cd ~/src/xmind-8-update7-linux/XMind_amd64; and ./XMind &'
 
+- config.json
+
+      {
+        "server":"45.78.7.121",
+        "server_port":443,
+        "local_port":1080,
+        "local_address":"127.0.0.1",
+        "password":"Sk2gUd375baM",
+        "method": "chacha20",
+        "timeout":600
+      }
+
+
